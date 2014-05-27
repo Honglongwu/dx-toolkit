@@ -59,7 +59,7 @@ def get_session_conf_dir():
             parent_process = parent_process.parent
         return default_session_dir
     except (ImportError, IOError, AttributeError) as e:
-#        sys.stderr.write(textwrap.fill("Expected error ({e}) while retrieving session configuration\n".format(e=type(e))))
+        sys.stderr.write(textwrap.fill("Expected error ({e}) while retrieving session configuration\n".format(e=type(e))))
         pass # psutil may not be available, or fail with IOError or AttributeError when /proc is not mounted
     except Exception as e:
         sys.stderr.write(textwrap.fill("Unexpected error ({e}) while retrieving session configuration\n".format(e=type(e))))
@@ -69,7 +69,7 @@ def _get_ppid_session_conf_dir(sessions_dir):
     try:
         return os.path.join(sessions_dir, str(os.getppid()))
     except AttributeError as e:
-#        sys.stderr.write(textwrap.fill("Expected error ({e}) while retrieving session configuration\n".format(e=type(e))))
+        sys.stderr.write(textwrap.fill("Expected error ({e}) while retrieving session configuration\n".format(e=type(e))))
         pass # os.getppid is not available on Windows
     except Exception as e:
         sys.stderr.write(textwrap.fill("Unexpected error ({e}) while retrieving session configuration\n".format(e=type(e))))
