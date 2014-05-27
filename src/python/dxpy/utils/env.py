@@ -77,7 +77,7 @@ def read_conf_dir(dirname):
     try:
         with open(os.path.join(dirname, 'environment.json')) as fd:
             env_vars = json.load(fd)
-    except Exception as e:
+    except:
         env_vars = {}
 
     for standalone_var in STANDALONE_VAR_NAMES:
@@ -147,7 +147,7 @@ def write_env_var_to_conf_dir(var, value, conf_dir):
         # Make sure the file has 600 permissions
         try:
             os.remove(env_jsonfile_path)
-        except Exception as e:
+        except:
             pass
         with os.fdopen(os.open(env_jsonfile_path, os.O_CREAT | os.O_WRONLY, 0o600), 'w') as fd:
             json.dump(env_vars, fd, indent=4)
@@ -156,7 +156,7 @@ def write_env_var_to_conf_dir(var, value, conf_dir):
         # Make sure the file has 600 permissions
         try:
             os.remove(os.path.join(conf_dir, var))
-        except Exception as e:
+        except:
             pass
         with os.fdopen(os.open(os.path.join(conf_dir, var), os.O_CREAT | os.O_WRONLY, 0o600), 'w') as fd:
             fd.write(value.encode(sys_encoding) if USING_PYTHON2 else value)
