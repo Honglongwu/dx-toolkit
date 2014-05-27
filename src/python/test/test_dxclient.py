@@ -484,7 +484,7 @@ class TestDXClient(DXTestCase):
                 del os.environ[var]
         shell1 = pexpect.spawn("bash")
         shell2 = pexpect.spawn("bash")
-        shell1.logfile = shell2.logfile = sys.stdout
+        #shell1.logfile = shell2.logfile = sys.stdout
         shell1.setwinsize(20, 90)
         shell2.setwinsize(20, 90)
 
@@ -514,12 +514,7 @@ class TestDXClient(DXTestCase):
             shell1.sendline("bash -c 'dx env'")
             expect_dx_env_cwd(shell1, "sessiontest1")
         except:
-            print("*** TODO: FIXME: Unable to verify that grandchild subprocess inherited session")
-            print("*** Begin test_dxpy_session_isolation debug data")
-            print(str(shell1))
-            print("*** test_dxpy_session_isolation debug data, begin buffer:")
-            print(shell1.buffer)
-            print("*** End test_dxpy_session_isolation debug data")
+            print("FIXME: Unable to verify that grandchild subprocess inherited session")
 
 class TestDXClientUploadDownload(DXTestCase):
     def test_dx_upload_download(self):
