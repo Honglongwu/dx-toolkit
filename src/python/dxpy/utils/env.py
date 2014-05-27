@@ -59,7 +59,7 @@ def get_session_conf_dir():
             parent_process = parent_process.parent
         return default_session_dir
     except (ImportError, IOError, AttributeError) as e:
-        sys.stderr.write(textwrap.fill("Expected error ({e}) while retrieving session configuration\n".format(e=type(e))))
+#        sys.stderr.write(textwrap.fill("Expected error ({e}) while retrieving session configuration\n".format(e=type(e))))
         pass # psutil may not be available, or fail with IOError or AttributeError when /proc is not mounted
     except Exception as e:
         sys.stderr.write(textwrap.fill("Unexpected error ({e}) while retrieving session configuration\n".format(e=type(e))))
@@ -69,7 +69,7 @@ def _get_ppid_session_conf_dir(sessions_dir):
     try:
         return os.path.join(sessions_dir, str(os.getppid()))
     except AttributeError as e:
-        sys.stderr.write(textwrap.fill("Expected error ({e}) while retrieving session configuration\n".format(e=type(e))))
+#        sys.stderr.write(textwrap.fill("Expected error ({e}) while retrieving session configuration\n".format(e=type(e))))
         pass # os.getppid is not available on Windows
     except Exception as e:
         sys.stderr.write(textwrap.fill("Unexpected error ({e}) while retrieving session configuration\n".format(e=type(e))))
@@ -105,11 +105,11 @@ def get_env(suppress_warning=False):
     '''
 
     env_vars = read_conf_dir(get_global_conf_dir())
-    sys.stderr.write("Read in 1: "+str(env_vars))
+#    sys.stderr.write("Read in 1: "+str(env_vars))
     env_vars.update(read_conf_dir(get_user_conf_dir()))
-    sys.stderr.write("Read in 2: "+str(env_vars))
+#    sys.stderr.write("Read in 2: "+str(env_vars))
     env_vars.update(read_conf_dir(get_session_conf_dir()))
-    sys.stderr.write("Read in 3: "+str(env_vars))
+#    sys.stderr.write("Read in 3: "+str(env_vars))
     env_overrides = []
     for var in VAR_NAMES:
         if var in environ:
@@ -124,7 +124,7 @@ def get_env(suppress_warning=False):
             sys.stderr.write(textwrap.fill("WARNING: The following environment variables were found to be different than the values last stored by dx: " + ", ".join(env_overrides), width=80) + '\n')
             sys.stderr.write(textwrap.fill('To use the values stored by dx, unset the environment variables in your shell by running "source ~/.dnanexus_config/unsetenv".  To clear the dx-stored values, run "dx clearenv".', width=80) + '\n')
 
-    sys.stderr.write("Read in 4: "+str(env_vars))
+#    sys.stderr.write("Read in 4: "+str(env_vars))
     return env_vars
 
 def write_env_var(var, value):
