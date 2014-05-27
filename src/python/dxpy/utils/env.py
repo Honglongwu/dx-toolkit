@@ -26,7 +26,7 @@ from __future__ import (print_function, unicode_literals)
 import os, sys, shutil, textwrap, json, locale
 
 from .. import DEFAULT_APISERVER_PROTOCOL, DEFAULT_APISERVER_HOST, DEFAULT_APISERVER_PORT
-from ..compat import open, str, USING_PYTHON2, expanduser
+from ..compat import open, str, USING_PYTHON2, expanduser, environ
 
 sys_encoding = locale.getdefaultlocale()[1] or 'UTF-8'
 
@@ -109,10 +109,10 @@ def get_env(suppress_warning=False):
     env_vars.update(read_conf_dir(get_session_conf_dir()))
     env_overrides = []
     for var in VAR_NAMES:
-        if var in os.environ:
-            if var in env_vars and env_vars.get(var) != os.environ[var]:
+        if var in environ:
+            if var in env_vars and env_vars.get(var) != environ[var]:
                 env_overrides.append(var)
-            env_vars[var] = os.environ[var]
+            env_vars[var] = environ[var]
         elif var not in env_vars:
             env_vars[var] = None
 

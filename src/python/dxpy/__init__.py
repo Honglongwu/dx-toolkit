@@ -129,7 +129,7 @@ import os, sys, json, time, logging, platform, collections
 from .packages import requests
 from .packages.requests.exceptions import ConnectionError, HTTPError, Timeout
 from .packages.requests.auth import AuthBase
-from .compat import USING_PYTHON2, expanduser
+from .compat import USING_PYTHON2, expanduser, environ
 
 logger = logging.getLogger(__name__)
 logging.getLogger('dxpy.packages.requests.packages.urllib3.connectionpool').setLevel(logging.ERROR)
@@ -241,9 +241,9 @@ def DXHTTPRequest(resource, data, method='POST', headers=None, auth=True, timeou
     if auth is True:
         auth = AUTH_HELPER
 
-    if 'verify' not in kwargs and 'DX_CA_CERT' in os.environ:
-        kwargs['verify'] = os.environ['DX_CA_CERT']
-        if os.environ['DX_CA_CERT'] == 'NOVERIFY':
+    if 'verify' not in kwargs and 'DX_CA_CERT' in environ:
+        kwargs['verify'] = environ['DX_CA_CERT']
+        if environ['DX_CA_CERT'] == 'NOVERIFY':
             kwargs['verify'] = False
 
     if jsonify_data:
@@ -285,7 +285,7 @@ def DXHTTPRequest(resource, data, method='POST', headers=None, auth=True, timeou
             response = session_handler.request(method, url, data=data, headers=headers, timeout=timeout, auth=auth,
                                                **kwargs)
 
-            if _UPGRADE_NOTIFY and response.headers.get('x-upgrade-info', '').startswith('A recommended update is available') and not os.environ.has_key('_ARGCOMPLETE'):
+            if _UPGRADE_NOTIFY and response.headers.get('x-upgrade-info', '').startswith('A recommended update is available') and not environ.has_key('_ARGCOMPLETE'):
                 logger.info(response.headers['x-upgrade-info'])
                 try:
                     with file(_UPGRADE_NOTIFY, 'a'):
@@ -498,7 +498,7 @@ def _initialize(suppress_warning=False):
     :type suppress_warning: boolean
     '''
     global _DEBUG, _UPGRADE_NOTIFY
-    _DEBUG = os.environ.get('_DX_DEBUG', False)
+    _DEBUG = environ.get('_DX_DEBUG', False)
     _UPGRADE_NOTIFY = expanduser('~/.dnanexus_config/.upgrade_notify')
     if os.path.exists(_UPGRADE_NOTIFY) and os.path.getmtime(_UPGRADE_NOTIFY) > time.time() - 86400: # 24 hours
         _UPGRADE_NOTIFY = False
@@ -506,25 +506,25 @@ def _initialize(suppress_warning=False):
     env_vars = get_env(suppress_warning)
     for var in env_vars:
         if env_vars[var] is not None:
-            os.environ[var] = env_vars[var]
+            environ[var] = env_vars[var]
 
-    set_api_server_info(host=os.environ.get("DX_APISERVER_HOST", None),
-                        port=os.environ.get("DX_APISERVER_PORT", None),
-                        protocol=os.environ.get("DX_APISERVER_PROTOCOL", None))
+    set_api_server_info(host=environ.get("DX_APISERVER_HOST", None),
+                        port=environ.get("DX_APISERVER_PORT", None),
+                        protocol=environ.get("DX_APISERVER_PROTOCOL", None))
 
-    if "DX_SECURITY_CONTEXT" in os.environ:
-        set_security_context(json.loads(os.environ['DX_SECURITY_CONTEXT']))
+    if "DX_SECURITY_CONTEXT" in environ:
+        set_security_context(json.loads(environ['DX_SECURITY_CONTEXT']))
 
-    if "DX_JOB_ID" in os.environ:
-        set_job_id(os.environ["DX_JOB_ID"])
-        if "DX_WORKSPACE_ID" in os.environ:
-            set_workspace_id(os.environ["DX_WORKSPACE_ID"])
-        if "DX_PROJECT_CONTEXT_ID" in os.environ:
-            set_project_context(os.environ["DX_PROJECT_CONTEXT_ID"])
+    if "DX_JOB_ID" in environ:
+        set_job_id(environ["DX_JOB_ID"])
+        if "DX_WORKSPACE_ID" in environ:
+            set_workspace_id(environ["DX_WORKSPACE_ID"])
+        if "DX_PROJECT_CONTEXT_ID" in environ:
+            set_project_context(environ["DX_PROJECT_CONTEXT_ID"])
     else:
-        if "DX_PROJECT_CONTEXT_ID" in os.environ:
-            set_workspace_id(os.environ["DX_PROJECT_CONTEXT_ID"])
-            set_project_context(os.environ["DX_PROJECT_CONTEXT_ID"])
+        if "DX_PROJECT_CONTEXT_ID" in environ:
+            set_workspace_id(environ["DX_PROJECT_CONTEXT_ID"])
+            set_project_context(environ["DX_PROJECT_CONTEXT_ID"])
 
 _initialize()
 
