@@ -514,7 +514,7 @@ class TestDXClient(DXTestCase):
             shell1.sendline("bash -c 'dx env'")
             expect_dx_env_cwd(shell1, "sessiontest1")
         except:
-            print("FIXME: Unable to verify that grandchild subprocess inherited session")
+            print(__file__ + ": FIXME: Unable to verify that grandchild subprocess inherited session")
 
 class TestDXClientUploadDownload(DXTestCase):
     def test_dx_upload_download(self):
