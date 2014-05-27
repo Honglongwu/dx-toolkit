@@ -58,7 +58,8 @@ def get_session_conf_dir():
                 return session_dir
             parent_process = parent_process.parent
         return default_session_dir
-    except (ImportError, IOError, AttributeError):
+    except (ImportError, IOError, AttributeError) as e:
+        sys.stderr.write(textwrap.fill("Expected error ({e}) while retrieving session configuration\n".format(e=type(e))))
         pass # psutil may not be available, or fail with IOError or AttributeError when /proc is not mounted
     except Exception as e:
         sys.stderr.write(textwrap.fill("Unexpected error ({e}) while retrieving session configuration\n".format(e=type(e))))
@@ -67,7 +68,8 @@ def get_session_conf_dir():
 def _get_ppid_session_conf_dir(sessions_dir):
     try:
         return os.path.join(sessions_dir, str(os.getppid()))
-    except AttributeError:
+    except AttributeError as e:
+        sys.stderr.write(textwrap.fill("Expected error ({e}) while retrieving session configuration\n".format(e=type(e))))
         pass # os.getppid is not available on Windows
     except Exception as e:
         sys.stderr.write(textwrap.fill("Unexpected error ({e}) while retrieving session configuration\n".format(e=type(e))))
@@ -77,7 +79,10 @@ def read_conf_dir(dirname):
     try:
         with open(os.path.join(dirname, 'environment.json')) as fd:
             env_vars = json.load(fd)
-    except:
+    except Exception as e:
+        import traceback
+        sys.stderr.write("EXC INFO:\n")
+        sys.stderr.write(traceback.format_exc())
         env_vars = {}
 
     for standalone_var in STANDALONE_VAR_NAMES:
