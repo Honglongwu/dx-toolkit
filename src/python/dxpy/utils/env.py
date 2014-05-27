@@ -26,7 +26,7 @@ from __future__ import (print_function, unicode_literals)
 import os, sys, shutil, textwrap, json, locale
 
 from .. import DEFAULT_APISERVER_PROTOCOL, DEFAULT_APISERVER_HOST, DEFAULT_APISERVER_PORT
-from ..compat import USING_PYTHON2, expanduser
+from ..compat import open, str, USING_PYTHON2, expanduser
 
 sys_encoding = locale.getdefaultlocale()[1] or 'UTF-8'
 
