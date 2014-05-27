@@ -133,7 +133,6 @@ def write_env_var(var, value):
     write_env_var_to_conf_dir(var, value, session_conf_dir)
 
 def write_env_var_to_conf_dir(var, value, conf_dir):
-    sys.stderr.write("Writing "+var+"="+value+" to "+conf_dir)
     env_jsonfile_path = os.path.join(conf_dir, 'environment.json')
     if var in CORE_VAR_NAMES:
         try:
@@ -166,8 +165,6 @@ def write_env_var_to_conf_dir(var, value, conf_dir):
         with open(expanduser('~/.dnanexus_config/') + 'unsetenv', 'w') as fd:
             for var in CORE_VAR_NAMES:
                 fd.write('unset ' + var + '\n')
-
-    sys.stderr.write("Done writing "+var+"="+value+" to "+conf_dir)
 
 def clearenv(args):
     if args.interactive:
