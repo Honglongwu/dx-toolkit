@@ -518,7 +518,7 @@ class TestDXClient(DXTestCase):
             print("*** Begin test_dxpy_session_isolation debug data")
             print(str(shell1))
             print("*** test_dxpy_session_isolation debug data, begin buffer:")
-            print(str(shell1.buffer))
+            print(shell1.buffer)
             print("*** End test_dxpy_session_isolation debug data")
 
 class TestDXClientUploadDownload(DXTestCase):
