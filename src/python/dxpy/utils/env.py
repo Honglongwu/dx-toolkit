@@ -62,7 +62,7 @@ def get_session_conf_dir():
 #        sys.stderr.write(textwrap.fill("Expected error ({e}) while retrieving session configuration\n".format(e=type(e))))
         pass # psutil may not be available, or fail with IOError or AttributeError when /proc is not mounted
     except Exception as e:
-#        sys.stderr.write(textwrap.fill("Unexpected error ({e}) while retrieving session configuration\n".format(e=type(e))))
+        sys.stderr.write(textwrap.fill("Unexpected error ({e}) while retrieving session configuration\n".format(e=type(e))))
     return _get_ppid_session_conf_dir(sessions_dir)
 
 def _get_ppid_session_conf_dir(sessions_dir):
@@ -72,7 +72,7 @@ def _get_ppid_session_conf_dir(sessions_dir):
 #        sys.stderr.write(textwrap.fill("Expected error ({e}) while retrieving session configuration\n".format(e=type(e))))
         pass # os.getppid is not available on Windows
     except Exception as e:
-#        sys.stderr.write(textwrap.fill("Unexpected error ({e}) while retrieving session configuration\n".format(e=type(e))))
+        sys.stderr.write(textwrap.fill("Unexpected error ({e}) while retrieving session configuration\n".format(e=type(e))))
     return os.path.join(sessions_dir, str(os.getpid()))
 
 def read_conf_dir(dirname):
