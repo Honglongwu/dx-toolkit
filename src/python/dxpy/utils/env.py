@@ -59,7 +59,6 @@ def get_session_conf_dir():
             parent_process = parent_process.parent
         return default_session_dir
     except (ImportError, IOError, AttributeError) as e:
-#        sys.stderr.write(textwrap.fill("Expected error ({e}) while retrieving session configuration\n".format(e=type(e))))
         pass # psutil may not be available, or fail with IOError or AttributeError when /proc is not mounted
     except Exception as e:
         sys.stderr.write(textwrap.fill("Unexpected error ({e}) while retrieving session configuration\n".format(e=type(e))))
@@ -69,7 +68,6 @@ def _get_ppid_session_conf_dir(sessions_dir):
     try:
         return os.path.join(sessions_dir, str(os.getppid()))
     except AttributeError as e:
-#        sys.stderr.write(textwrap.fill("Expected error ({e}) while retrieving session configuration\n".format(e=type(e))))
         pass # os.getppid is not available on Windows
     except Exception as e:
         sys.stderr.write(textwrap.fill("Unexpected error ({e}) while retrieving session configuration\n".format(e=type(e))))
@@ -80,9 +78,6 @@ def read_conf_dir(dirname):
         with open(os.path.join(dirname, 'environment.json')) as fd:
             env_vars = json.load(fd)
     except Exception as e:
-#        import traceback
-#        sys.stderr.write("EXC INFO:\n")
-#        sys.stderr.write(traceback.format_exc() + "\n")
         env_vars = {}
 
     for standalone_var in STANDALONE_VAR_NAMES:
@@ -149,9 +144,6 @@ def write_env_var_to_conf_dir(var, value, conf_dir):
             with open(env_jsonfile_path) as fd:
                 env_vars = json.load(fd)
         except Exception as e:
-#            import traceback
-#            sys.stderr.write("EXC INFO2:\n")
-#            sys.stderr.write(traceback.format_exc() + "\n")
             env_vars = {}
         if value is None and var in env_vars:
             del env_vars[var]
@@ -162,9 +154,6 @@ def write_env_var_to_conf_dir(var, value, conf_dir):
             os.remove(env_jsonfile_path)
         except Exception as e:
             pass
-#            import traceback
-#            sys.stderr.write("EXC INFO3:\n")
-#            sys.stderr.write(traceback.format_exc() + "\n")
         with os.fdopen(os.open(env_jsonfile_path, os.O_CREAT | os.O_WRONLY, 0o600), 'w') as fd:
             json.dump(env_vars, fd, indent=4)
             fd.write("\n")
@@ -174,9 +163,6 @@ def write_env_var_to_conf_dir(var, value, conf_dir):
             os.remove(os.path.join(conf_dir, var))
         except Exception as e:
             pass
-#            import traceback
-#            sys.stderr.write("EXC INFO4:\n")
-#            sys.stderr.write(traceback.format_exc() + "\n")
         with os.fdopen(os.open(os.path.join(conf_dir, var), os.O_CREAT | os.O_WRONLY, 0o600), 'w') as fd:
             fd.write(value.encode(sys_encoding) if USING_PYTHON2 else value)
 
