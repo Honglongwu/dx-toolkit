@@ -143,7 +143,10 @@ def write_env_var_to_conf_dir(var, value, conf_dir):
         try:
             with open(env_jsonfile_path) as fd:
                 env_vars = json.load(fd)
-        except:
+        except Exception as e:
+            import traceback
+            sys.stderr.write("EXC INFO2:\n")
+            sys.stderr.write(traceback.format_exc())
             env_vars = {}
         if value is None and var in env_vars:
             del env_vars[var]
@@ -152,8 +155,10 @@ def write_env_var_to_conf_dir(var, value, conf_dir):
         # Make sure the file has 600 permissions
         try:
             os.remove(env_jsonfile_path)
-        except:
-            pass
+        except Exception as e:
+            import traceback
+            sys.stderr.write("EXC INFO3:\n")
+            sys.stderr.write(traceback.format_exc())
         with os.fdopen(os.open(env_jsonfile_path, os.O_CREAT | os.O_WRONLY, 0o600), 'w') as fd:
             json.dump(env_vars, fd, indent=4)
             fd.write("\n")
@@ -161,8 +166,10 @@ def write_env_var_to_conf_dir(var, value, conf_dir):
         # Make sure the file has 600 permissions
         try:
             os.remove(os.path.join(conf_dir, var))
-        except:
-            pass
+        except Exception as e:
+            import traceback
+            sys.stderr.write("EXC INFO4:\n")
+            sys.stderr.write(traceback.format_exc())
         with os.fdopen(os.open(os.path.join(conf_dir, var), os.O_CREAT | os.O_WRONLY, 0o600), 'w') as fd:
             fd.write(value.encode(sys_encoding) if USING_PYTHON2 else value)
 
