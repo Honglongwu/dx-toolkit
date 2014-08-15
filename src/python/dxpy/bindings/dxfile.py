@@ -29,7 +29,7 @@ import concurrent.futures
 import dxpy
 from . import DXDataObject
 from ..exceptions import DXFileError
-from ..utils import warn
+from ..utils import warn, save_traceback
 from ..compat import BytesIO
 
 if dxpy.snappy_available:
@@ -432,6 +432,7 @@ class DXFile(DXDataObject):
         '''
         self._wait_on_close(timeout, **kwargs)
 
+    @save_traceback
     def upload_part(self, data, index=None, display_progress=False, report_progress_fn=None, **kwargs):
         """
         :param data: Data to be uploaded in this part

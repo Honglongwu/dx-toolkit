@@ -174,6 +174,10 @@ def exit_with_exc_info(code=1, message='', print_tb=False, exception=None):
     if exc_type is not None:
         if print_tb:
             traceback.print_exc()
+            if exception is not None and hasattr(exception, "original_traceback"):
+                print("Original traceback (most recent call last):")
+                for line in exception.original_traceback:
+                    print(line)
         else:
             for line in traceback.format_exception_only(exc_type, exc_value):
                 sys.stderr.write(line)

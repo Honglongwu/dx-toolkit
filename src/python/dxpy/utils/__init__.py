@@ -22,6 +22,8 @@ from __future__ import (print_function, unicode_literals)
 
 import os, json, collections, concurrent.futures, traceback, sys, time, gc
 import dateutil.parser
+from functools import wraps
+
 from .exec_utils import run, convert_handlers_to_dxlinks, parse_args_as_job_input, entry_point, DXJSONEncoder
 from .thread_pool import PrioritizingThreadPool
 from .. import logger
@@ -307,3 +309,13 @@ def json_loads_raise_on_duplicates(*args, **kwargs):
 
 def warn(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
+
+def save_traceback(f):
+    @wraps(f)
+    def with_original_traceback(*args, **kwargs):
+        try:
+            return f(*args, **kwargs)
+        except Exception as e:
+            e.original_traceback = traceback.format_tb(sys.exc_info()[2])
+            raise
+    return with_original_traceback
