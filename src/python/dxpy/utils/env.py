@@ -156,25 +156,26 @@ def write_env_var(var, value):
 
 def write_env_var_to_conf_dir(var, value, conf_dir):
     env_jsonfile_path = os.path.join(conf_dir, "environment.json")
-    if var in CORE_VAR_NAMES:
-        try:
-            with open(env_jsonfile_path) as fd:
-                env_vars = json.load(fd)
-        except:
-            env_vars = {}
-        if value is None and var in env_vars:
-            del env_vars[var]
-        else:
-            env_vars[var] = value
-        # Make sure the file has 600 permissions
-        try:
-            os.remove(env_jsonfile_path)
-        except:
-            pass
-        with os.fdopen(os.open(env_jsonfile_path, os.O_CREAT | os.O_WRONLY, 0o600), "w") as fd:
-            json.dump(env_vars, fd, indent=4)
-            fd.write("\n")
-    else: # DX_CLI_WD, DX_USERNAME, DX_PROJECT_CONTEXT_NAME
+
+    try:
+        with open(env_jsonfile_path) as fd:
+            env_vars = json.load(fd)
+    except:
+        env_vars = {}
+    if value is None and var in env_vars:
+        del env_vars[var]
+    else:
+        env_vars[var] = value
+    # Make sure the file has 600 permissions
+    try:
+        os.remove(env_jsonfile_path)
+    except:
+        pass
+    with os.fdopen(os.open(env_jsonfile_path, os.O_CREAT | os.O_WRONLY, 0o600), "w") as fd:
+        json.dump(env_vars, fd, indent=4)
+        fd.write("\n")
+
+    if var in STANDALONE_VAR_NAMES:
         # Make sure the file has 600 permissions
         try:
             os.remove(os.path.join(conf_dir, var))
